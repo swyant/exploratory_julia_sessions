@@ -112,6 +112,15 @@ Plots.plot3d(atom1x,atom1y,atom1z,marker=2)
 # ╔═╡ 086a423d-1d4a-4412-b1fd-8575cf95d2fa
 md"Let's try an array comprehension approach"
 
+# ╔═╡ 637c95b2-5f39-4c84-8234-2a4d14f51371
+atom1traj_pre = [x[1] for x in sys.loggers.coords.history ]
+
+# ╔═╡ 509d3ffb-6ed5-4205-abc4-972b33aada8e
+atom1traj = mapreduce(permutedims,vcat,atom1traj_pre)
+
+# ╔═╡ bd16dfff-83b8-4a3e-ad64-874e1fe927cc
+Plots.plot3d(atom1traj[:,1],atom1traj[:,2],atom1traj[:,3],marker=2)
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -2133,5 +2142,8 @@ version = "1.4.1+0"
 # ╠═5870ed82-f495-4237-a1e4-e47aed5f3ae0
 # ╠═c75bb124-7049-419f-b1f4-34defa5977d2
 # ╠═086a423d-1d4a-4412-b1fd-8575cf95d2fa
+# ╠═637c95b2-5f39-4c84-8234-2a4d14f51371
+# ╠═509d3ffb-6ed5-4205-abc4-972b33aada8e
+# ╠═bd16dfff-83b8-4a3e-ad64-874e1fe927cc
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
