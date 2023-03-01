@@ -71,11 +71,46 @@ begin
 	atom3Traj = sys.loggers.coords.history[3]
 end
 
+# ╔═╡ e89cfee6-af46-4a2e-b327-d70ae4b1dc42
+typeof(atom1Traj)
+
 # ╔═╡ d60227b4-d59f-4199-95a4-06977e65da44
 Plots.plot3d(getindex.(atom1Traj,1),getindex.(atom1Traj,2),getindex.(atom1Traj,3), marker=2)
 
-# ╔═╡ 188fd185-620d-45c1-9ec0-3c3296de9bd7
+# ╔═╡ b4b62c7b-9bce-49c4-9796-29124db650f3
+md"So that is obviously wrong. Below, I find a disgusting solution that does what I want it to do"
 
+# ╔═╡ 188fd185-620d-45c1-9ec0-3c3296de9bd7
+#fieldnames(sys.loggers.coords)
+sys.loggers.coords
+
+# ╔═╡ 4d3b149e-c8b7-4f78-ab8b-e2685fa08d3c
+length(sys.loggers.coords.history)
+
+# ╔═╡ 270fca15-6a8c-420a-b942-84673cd74070
+length(sys.loggers.coords.history[1])
+
+# ╔═╡ 9554fbf9-bfb5-42b2-8b7d-2a0ef7bf272a
+length(sys.loggers.coords.history[1][1])
+
+# ╔═╡ 7107ca40-1d18-4f40-b8c1-19fc6cca2dc8
+typeof(sys.loggers.coords.history)
+
+# ╔═╡ 892cdfd5-37fa-4111-b89c-d656f5e4c83d
+typeof(getindex.(getindex.(sys.loggers.coords.history,1),1))
+
+# ╔═╡ 5870ed82-f495-4237-a1e4-e47aed5f3ae0
+begin
+	atom1x = getindex.(getindex.(sys.loggers.coords.history,1),1)
+	atom1y = getindex.(getindex.(sys.loggers.coords.history,1),2)
+	atom1z = getindex.(getindex.(sys.loggers.coords.history,1),3)
+end
+
+# ╔═╡ c75bb124-7049-419f-b1f4-34defa5977d2
+Plots.plot3d(atom1x,atom1y,atom1z,marker=2)
+
+# ╔═╡ 086a423d-1d4a-4412-b1fd-8575cf95d2fa
+md"Let's try an array comprehension approach"
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -2086,7 +2121,17 @@ version = "1.4.1+0"
 # ╠═8158aa75-2d37-4428-81b0-fec2eef72872
 # ╠═60d887a1-9e72-4708-a87a-db031044831e
 # ╠═6b57f6f0-415b-4a4e-a280-fe687a9498e8
+# ╠═e89cfee6-af46-4a2e-b327-d70ae4b1dc42
 # ╠═d60227b4-d59f-4199-95a4-06977e65da44
+# ╠═b4b62c7b-9bce-49c4-9796-29124db650f3
 # ╠═188fd185-620d-45c1-9ec0-3c3296de9bd7
+# ╠═4d3b149e-c8b7-4f78-ab8b-e2685fa08d3c
+# ╠═270fca15-6a8c-420a-b942-84673cd74070
+# ╠═9554fbf9-bfb5-42b2-8b7d-2a0ef7bf272a
+# ╠═7107ca40-1d18-4f40-b8c1-19fc6cca2dc8
+# ╠═892cdfd5-37fa-4111-b89c-d656f5e4c83d
+# ╠═5870ed82-f495-4237-a1e4-e47aed5f3ae0
+# ╠═c75bb124-7049-419f-b1f4-34defa5977d2
+# ╠═086a423d-1d4a-4412-b1fd-8575cf95d2fa
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
