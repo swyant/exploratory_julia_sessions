@@ -40,7 +40,7 @@ sys = System(
 	velocities     	= velocities,
 	boundary 		= boundary,
 	loggers 		= (temp=TemperatureLogger(10),
-					   coords=CoordinateLogger(1)),
+					   coords=CoordinateLogger(5)),
 )
 
 # ╔═╡ 532ccaf2-d8f4-4c13-a832-6eddabb5bbc1
@@ -50,10 +50,10 @@ simulator = VelocityVerlet(
 )
 
 # ╔═╡ 1bfba7a8-6102-46ad-9f72-6e174e3769c8
-simulate!(sys,simulator,10)
+simulate!(sys,simulator,100)
 
 # ╔═╡ 22af18da-8c34-41bf-b579-e12d2e5a8fb9
-visualize(sys.loggers.coords,boundary,"sim_lj.mp4") # Won't output 😞
+#visualize(sys.loggers.coords,boundary,"sim_lj.mp4") # Won't output 😞
 
 # ╔═╡ b0717be2-a80e-4f87-99e7-9ebdf9d2a3a3
 sys.loggers.coords.history[1][1][3]
