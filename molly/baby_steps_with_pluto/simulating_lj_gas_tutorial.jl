@@ -107,7 +107,14 @@ begin
 end
 
 # ╔═╡ c75bb124-7049-419f-b1f4-34defa5977d2
-Plots.plot3d(atom1x,atom1y,atom1z,marker=2)
+Plots.plot3d(atom1x,
+	   		atom1y,
+			atom1z,
+			marker=1,
+			#aspect_ratio=:auto,
+			xlims=(0.0u"nm",4.0u"nm"),
+			ylims=(0.0u"nm",4.0u"nm"),
+			zlims=(0.0u"nm",4.0u"nm"),)
 
 # ╔═╡ 086a423d-1d4a-4412-b1fd-8575cf95d2fa
 md"Let's try an array comprehension approach"
@@ -140,7 +147,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.5"
 manifest_format = "2.0"
-project_hash = "731df950b5d1dc28135c85632be68336bf3f5b1e"
+project_hash = "21503731a20cb03091e8e29c0eb035061b78ef1a"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
