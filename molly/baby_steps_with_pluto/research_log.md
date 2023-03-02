@@ -2,6 +2,18 @@
 
 For context, I'm simultaneously learning Molly, Pluto, the plotting ecosystem, and even some Julia basics. 
 
+## 3-2-23 
+
+### Plots 
+
+- restarting the notebook, the plots are no longer interactive. Also the aspect ratios are fine (in fact, I think the aspect ratio issue only showed up once the particle crossed the periodic boundary
+
+- Ah OK, I think I called Plots.plotly(), which changes the backend, but then I deleted that cell. calling Plots.gr() resets, Look at the checking_plots.jl file for clarity
+
+- Still haven't run into the aspect ratio issue again, I do think it was triggered when the particle crossed the z periodic boundary, so let's see if we can find that case. 
+
+- Found an atom that crossed the z pb, did not trigger the aspect ratio issue with either gr or plotly backends. So that was probably a bug triggered by some sequence of events previously. OK, I'm not going to spend anymore time on that.
+
 ## 3-1-23
 
 ### Julia-focused
