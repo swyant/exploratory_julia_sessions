@@ -14,6 +14,10 @@ For context, I'm simultaneously learning Molly, Pluto, the plotting ecosystem, a
 
 - Found an atom that crossed the z pb, did not trigger the aspect ratio issue with either gr or plotly backends. So that was probably a bug triggered by some sequence of events previously. OK, I'm not going to spend anymore time on that.
 
+### Pluto
+
+- So modification to a struct's fields does not trigger re-evaluation, even if struct itself is global. Hence why the simulate!() command didn't do anything. See quick_pluto_topology_check.jl
+
 ## 3-1-23
 
 ### Julia-focused
@@ -21,7 +25,7 @@ For context, I'm simultaneously learning Molly, Pluto, the plotting ecosystem, a
 - Had to figure out how to "slice" a vector of StaticArrays. Naively did it the way I would do in python, didn't work. Have to use either getindex.() or array comprehension 
 
 ### Pluto issues
-- The manifest resolution warnings that sometimes pop up (in the terminal) when using Pluto's package manager are a bit annoying. I think it might be specific to Julia 1.8. Can't quite tell what triggers it, because it didn't happen every time I loaded a package. Also a fresh Julia REPL helped. 
+- The manifest resolution warnings that sometimes pop up (in the terminal) when using Pluto's package manager are a bit annoying. I think it might be specific to Julia 1.8. Can't quite tell what triggers it, because it didn't happen every time I loaded a package. Also a fresh Julia REPL helped. (I assume this has something to do with the order in which instantiate,resolve are called)
 
 - My plots were originally not interactive, but then became interactive. Maybe because I called plotlyJs() at one point (then deleted, since I didn't have the relevant PlotlyJs package. Also was messing around with (already loaded) GLMakie commands (couldn't get the scatter to work because of a unit issue, even though it worked fine with Plots.plot3d), so maybe that changed things?
 
