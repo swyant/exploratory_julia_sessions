@@ -48,7 +48,25 @@ md"Reading standard xyz file -- Appears to fail"
 #system2 = load_system("../ref_config/dump_final.xyz")
 
 # ╔═╡ 38abf557-84c9-4d6c-b7e4-a039d08a5309
-system2 = load_system("../ref_config/fixed_dump_final.xyz")
+#system2 = load_system("../ref_config/fixed_dump_final.xyz")
+
+# ╔═╡ 0d9e0de7-de2c-4040-ae2b-5adfbcd45987
+md"Reading (manually created) extxyz file"
+
+# ╔═╡ f7c445db-6a5c-43e6-bce0-6ea99cf11b37
+system3 = load_system("../ref_config/dump_final.extxyz")
+
+# ╔═╡ b85218e6-5d9d-48e4-a36f-88b02404bed7
+md"Reading (manually created) extxyz file with forces"
+
+# ╔═╡ dca85534-2f5b-4ab3-b517-2853f797faaa
+system4 = load_system("../ref_config/dump_final_wforces.extxyz")
+
+# ╔═╡ 5bd3263f-85a2-4fae-b3c8-62ebd5d01736
+atomkeys(system4)
+
+# ╔═╡ d9c11b88-cd94-4c4d-b236-e8dad58761fe
+system4[1][:forces]
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -480,5 +498,11 @@ version = "17.4.0+0"
 # ╟─f514edad-b5af-4a0b-99ec-d0af6b8b7423
 # ╠═fea940f8-51a0-4069-9742-4e4269bf853f
 # ╠═38abf557-84c9-4d6c-b7e4-a039d08a5309
+# ╟─0d9e0de7-de2c-4040-ae2b-5adfbcd45987
+# ╠═f7c445db-6a5c-43e6-bce0-6ea99cf11b37
+# ╟─b85218e6-5d9d-48e4-a36f-88b02404bed7
+# ╠═dca85534-2f5b-4ab3-b517-2853f797faaa
+# ╠═5bd3263f-85a2-4fae-b3c8-62ebd5d01736
+# ╠═d9c11b88-cd94-4c4d-b236-e8dad58761fe
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
