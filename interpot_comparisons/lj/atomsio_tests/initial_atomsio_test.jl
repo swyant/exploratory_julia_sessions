@@ -42,7 +42,13 @@ atoms1 = [Atom(:Ar, ri * u"Å") for ri in pos1]
 sys1 = FlexibleSystem(atoms1,box1,bcs1)
 
 # ╔═╡ f514edad-b5af-4a0b-99ec-d0af6b8b7423
+md"Reading standard xyz file -- Appears to fail"
 
+# ╔═╡ fea940f8-51a0-4069-9742-4e4269bf853f
+#system2 = load_system("../ref_config/dump_final.xyz")
+
+# ╔═╡ 38abf557-84c9-4d6c-b7e4-a039d08a5309
+system2 = load_system("../ref_config/fixed_dump_final.xyz")
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -471,6 +477,8 @@ version = "17.4.0+0"
 # ╠═4e50d8d2-2dcb-4c0c-a4cb-93c33d89998f
 # ╠═6d035aa0-48b3-4965-bbb4-7c810eedf834
 # ╠═b60a0a84-b2ca-4f9e-b389-352483b1f65c
-# ╠═f514edad-b5af-4a0b-99ec-d0af6b8b7423
+# ╟─f514edad-b5af-4a0b-99ec-d0af6b8b7423
+# ╠═fea940f8-51a0-4069-9742-4e4269bf853f
+# ╠═38abf557-84c9-4d6c-b7e4-a039d08a5309
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
