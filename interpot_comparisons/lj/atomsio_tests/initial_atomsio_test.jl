@@ -68,6 +68,21 @@ atomkeys(system4)
 # ╔═╡ d9c11b88-cd94-4c4d-b236-e8dad58761fe
 system4[1][:forces]
 
+# ╔═╡ 7b78e10f-7928-483f-ba4b-1f7151d6a360
+md"try reading in the .lammps file via ASE"
+
+# ╔═╡ 458c33b0-2ddc-4b2c-84a4-d5c898ad2bd8
+system5 = load_system("../ref_config/dump_final_forces.lammps")
+
+# ╔═╡ 0f52ae1c-c683-4aaa-a1db-a570bb2b6a8f
+system5[1]
+
+# ╔═╡ 0977492e-c906-493b-8370-06505f2f5692
+system6 = load_system("../ref_config/fixed_dump_final_forces.lammps")
+
+# ╔═╡ 564f902d-2d0c-4b80-81eb-03ace2cc729f
+atomkeys(system6)
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -504,5 +519,10 @@ version = "17.4.0+0"
 # ╠═dca85534-2f5b-4ab3-b517-2853f797faaa
 # ╠═5bd3263f-85a2-4fae-b3c8-62ebd5d01736
 # ╠═d9c11b88-cd94-4c4d-b236-e8dad58761fe
+# ╠═7b78e10f-7928-483f-ba4b-1f7151d6a360
+# ╠═458c33b0-2ddc-4b2c-84a4-d5c898ad2bd8
+# ╠═0f52ae1c-c683-4aaa-a1db-a570bb2b6a8f
+# ╠═0977492e-c906-493b-8370-06505f2f5692
+# ╠═564f902d-2d0c-4b80-81eb-03ace2cc729f
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
