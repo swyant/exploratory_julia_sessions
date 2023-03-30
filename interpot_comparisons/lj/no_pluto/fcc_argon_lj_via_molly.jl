@@ -28,4 +28,15 @@ inter_lj = InteratomicPotentialInter(lj_p)
 
 general_inters = (inter_lj,)
 
-forces 
+f_p = Molly.forces(inter_lj, sys)
+
+f_p = [uconvert.(u"eV/Å", fi) for fi in f_p]
+
+
+#### run zero simulation
+simulator = VelocityVerlet(
+    dt=0.001u"ps",
+    coupling=AndersenThermostat(80u"K", 1.0u"ps"),
+)
+
+simulate!(sys,simulator,0)
