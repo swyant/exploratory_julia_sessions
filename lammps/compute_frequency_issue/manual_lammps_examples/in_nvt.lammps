@@ -1,0 +1,110 @@
+# FCC Argon LJ: e=119.8 kB, sigma = 3.405, rcut=8.51 (10.1103/PhysRevB.54.340)
+
+units          metal 
+boundary       p p p 
+atom_style     atomic
+atom_modify    map yes
+
+read_data      fcc_lj_Ar_box-zeroed_shifted_DATA 
+
+pair_style     lj/cut 8.51
+pair_coeff     * * 0.01032 3.405 
+
+variable T        equal  80
+variable Tdamp    equal  0.1
+variable Tseed    equal  12280329
+
+velocity     all create $T ${Tseed} mom yes rot yes dist gaussian
+fix          nvt all nvt temp $T $T ${Tdamp}
+
+compute peatom all pe/atom 
+variable atom1pe equal c_peatom[1]
+
+
+###### Different cases, uncomment a section and run ########
+
+
+#### still doesn't work of course 
+#run 0 
+#print "this is myPE ${atom1pe}"
+
+
+#### and this still works
+#fix output all print 1 "atom 1 energy: ${atom1pe}" # forces the compute every timestep
+#run 0 
+#print "this is myPE ${atom1pe}"
+
+
+#### and this still works
+#thermo_style custom v_atom1pe
+#run 0 
+#print "this is myPE ${atom1pe}"
+
+
+#### for multiple timesteps, need to be careful when compute was called. This won't work
+#fix output all print 5 "atom 1 energy: ${atom1pe}" # forces the compute every *5* timesteps
+#run 13 
+#print "this is myPE ${atom1pe}"
+
+
+#### to fix, we either need to run in increments in 5 before calling the print line
+#fix output all print 5 "atom 1 energy: ${atom1pe}" # forces the compute every *5* timesteps
+#run 10 
+#print "this is myPE ${atom1pe}"
+
+
+#### or we need to change the frequency of fix print 
+#fix output all print 1 "atom 1 energy: ${atom1pe}" # forces the compute every *1* timesteps
+#run 13 
+#print "this is myPE ${atom1pe}"
+
+
+#### note that run 0 is a bit of a special case, and will always return the values for the current atom configuration at a given timestep 
+#fix output all print 5 "atom 1 energy: ${atom1pe}" # forces the compute every *5* timesteps
+#run 0 
+#print "this is myPE ${atom1pe}"
+
+
+#### using the thermo_style approach, it acutally doesn't matter the frequency that thermo is outputted
+#### because thermo will always be computed on last timestep
+#thermo_style custom v_atom1pe
+#thermo 5 
+#run 13 
+#print "this is myPE ${atom1pe}"
+
+
+#### other fixes that call the compute can be used, but you have to make sure the frequency of
+#### the compute matches with how many timesteps you run before calling the print
+
+### run 0 is ok here
+#fix myat1 all ave/time 10 1 10 v_atom1pe
+#run 0 
+#print "this is myPE ${atom1pe}"
+
+
+#### but run 1 is not 
+#fix myat1 all ave/time 10 1 10 v_atom1pe
+#run 1 
+#print "this is myPE ${atom1pe}"
+
+
+#### but run 10 is OK
+#fix myat1 all ave/time 10 1 10 v_atom1pe
+#run 10 
+#print "this is myPE ${atom1pe}"
+
+
+#### finally, can't just add run 0 to overcome fix frequency issue 
+#### e.g.
+#fix output all print 5 "atom 1 energy: ${atom1pe}" # forces the compute every *5* timesteps
+#run 13 
+#run 0   # this WON'T cause fix print to output and so won't call the compute
+#print "this is myPE ${atom1pe}"
+
+
+#### Instead, would have to manually reset the timestep to 0 to do that 
+#fix output all print 5 "atom 1 energy: ${atom1pe}" # forces the compute every *5* timesteps
+#run 13 
+#reset_timestep 0
+#run 0   # this WON'T cause fix print to output and so won't call the compute
+#print "this is myPE ${atom1pe}"

@@ -1,0 +1,41 @@
+# FCC Argon LJ: e=119.8 kB, sigma = 3.405, rcut=8.51 (10.1103/PhysRevB.54.340)
+
+units          metal 
+boundary       p p p 
+atom_style     atomic
+atom_modify    map yes
+
+read_data      fcc_lj_Ar_box-zeroed_shifted_DATA 
+
+pair_style     lj/cut 8.51
+pair_coeff     * * 0.01032 3.405 
+
+compute peatom all pe/atom 
+#variable myPe atom c_peatom
+variable atom1pe equal c_peatom[1]
+
+###### Different cases, uncomment a section and run ########
+
+#### this will not work, because nothing actually calls the compute peatoms
+#run 0 
+#print "this is myPE ${atom1pe}"
+
+
+#### This does not work, since the fix print never gets an opportunity to call the compute
+#fix output all print 1 "atom 1 energy: ${atom1pe}" # will cause compute every timestep
+#print "this is myPE ${atom1pe}"
+
+
+#### This works
+#fix output all print 1 "atom 1 energy: ${atom1pe}" # forces the compute every timestep
+#run 0 
+#print "this is myPE ${atom1pe}"
+
+
+#### This also works
+#thermo_style custom v_atom1pe
+#run 0 
+#print "this is myPE ${atom1pe}"
+
+
+
