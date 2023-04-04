@@ -35,24 +35,24 @@ function molly_params(sys::AtomsBase.FlexibleSystem)
 end 
 
 
-function convertMollySys(msys::Molly.System)
-    atoms = []
-    for i in 1:length(msys.atoms)
-        coord = msys.coords[i]
-        atm_species = msys.atoms[i].atomic_symbol 
-        push!(atoms,AtomsBase.Atom(atm_species,coord))
-    end
-
-    # FRAGILE! Assuming CubicBoundary. And angstrom units...
-    side_lengths = msys.boundary.side_lengths
-    box = [[side_lengths[1],0.0,0.0],[0.0,side_lengths[2],0.0],[0.0,0.0,side_lengths[3]]]u"Å"
-
-    # FRAGILE! assuming periodic boundary conditions 
-    bcs = [Periodic(),Periodic(),Periodic()]
-    print("hey")
-
-    FlexibleSystem(atoms,box,bcs)
-end
+#function convertMollySys(msys::Molly.System)
+#    atoms = []
+#    for i in 1:length(msys.atoms)
+#        coord = msys.coords[i]
+#        atm_species = msys.atoms[i].atomic_symbol 
+#        push!(atoms,AtomsBase.Atom(atm_species,coord))
+#    end
+#
+#    # FRAGILE! Assuming CubicBoundary. And angstrom units...
+#    side_lengths = msys.boundary.side_lengths
+#    box = [[side_lengths[1],0.0,0.0],[0.0,side_lengths[2],0.0],[0.0,0.0,side_lengths[3]]]u"Å"
+#
+#    # FRAGILE! assuming periodic boundary conditions 
+#    bcs = [Periodic(),Periodic(),Periodic()]
+#    print("hey")
+#
+#    FlexibleSystem(atoms,box,bcs)
+#end
 ############################################################
 
 # load system with AtomsIO
