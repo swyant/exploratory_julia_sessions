@@ -19,6 +19,7 @@ function Molly.forces(inter::InteratomicPotentialInter, sys::AbstractSystem, nei
     eandf.f
 end
 
+#TODO: generalize by using AtomsBase.AbstractSystem API
 function molly_params(sys::AtomsBase.FlexibleSystem)
     coords = [atm.position for atm in sys.particles]
 
