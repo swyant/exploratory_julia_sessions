@@ -1,6 +1,6 @@
 using Molly
 using InteratomicPotentials
-using AtomsIO # .CondaPkg/ comes from this
+using AtomsIO # .CondaPkg/ comes from this, but shouldn't with newest version
 using Unitful
 using UnitfulAtomic
 using AtomsBase
@@ -47,7 +47,7 @@ rcut = 8.51u"Å"
 species = [:Ar]
 lj_p = InteratomicPotentials.LennardJones(ϵ,σ,rcut,species)
 
-inter_lj = InteratomicPotentialInter(lj_p,energy_and_force)
+inter_lj = InteratomicPotentialInter(lj_p,InteratomicPotentials.energy_and_force)
 general_inters = (inter_lj,)
 
 # Check force with regular sys obtained with AtomsIO
@@ -56,14 +56,13 @@ f_p = Molly.forces(inter_lj, sys)
 
 mp = molly_params(sys)
 
-# Both options here cause the dimension error when pushing to force logger
 m_sys = System(;mp...,
             general_inters=general_inters, 
-            loggers=(force=ForceLogger(1),),
-            #force_units=u"eV/Å",
+            loggers=(force=ForceLogger(typeof(1.0u"eV/Å"), 1),),
+            force_units=u"eV/Å",
+            #loggers=(force=ForceLogger(Float32, 1),),
             #force_units=NoUnits,
             )
-
 
 #### run zero simulation
 simulator = VelocityVerlet(
@@ -72,53 +71,9 @@ simulator = VelocityVerlet(
 )
 
 simulate!(m_sys,simulator,0)
-"""
-if not using default forces, get the following error:
-    ERROR: DimensionError: kJ nm⁻¹ mol⁻¹ and 3.85209493530676e-5 eV Å⁻¹ are not dimensionally compatible.
-    Stacktrace:
-      [1] convert(#unused#::Type{Quantity{Float64, 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, nm⁻¹, mol⁻¹), 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}, x::Quantity{Float64, 𝐋 𝐌 𝐓⁻², Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}})
-        @ Unitful ~/.julia/packages/Unitful/G8F13/src/conversion.jl:112
-      [2] macro expansion
-        @ ~/.julia/packages/StaticArraysCore/U2Z1K/src/StaticArraysCore.jl:81 [inlined]
-      [3] convert_ntuple
-        @ ~/.julia/packages/StaticArraysCore/U2Z1K/src/StaticArraysCore.jl:77 [inlined]
-      [4] SVector{3, Quantity{Float64, 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, nm⁻¹, mol⁻¹), 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}(x::Tuple{Quantity{Float64, 𝐋 𝐌 𝐓⁻², Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}}, Quantity{Float64, 𝐋 𝐌 𝐓⁻², Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}}, Quantity{Float64, 𝐋 𝐌 𝐓⁻², Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}}})
-        @ StaticArraysCore ~/.julia/packages/StaticArraysCore/U2Z1K/src/StaticArraysCore.jl:113
-      [5] convert
-        @ ~/.julia/packages/StaticArrays/jA1zK/src/convert.jl:176 [inlined]
-      [6] setindex!(A::Vector{SVector{3, Quantity{Float64, 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, nm⁻¹, mol⁻¹), 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}}, x::SVector{3, Quantity{Float64, 𝐋 𝐌 𝐓⁻², Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}}}, i1::Int64)
-        @ Base ./array.jl:966
-      [7] _unsafe_copyto!(dest::Vector{SVector{3, Quantity{Float64, 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, nm⁻¹, mol⁻¹), 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}}, doffs::Int64, src::Vector{SVector{3, Quantity{Float64, 𝐋 𝐌 𝐓⁻², Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}}}}, soffs::Int64, n::Int64)
-        @ Base ./array.jl:253
-      [8] unsafe_copyto!
-        @ ./array.jl:307 [inlined]
-      [9] _copyto_impl!
-        @ ./array.jl:331 [inlined]
-     [10] copyto!
-        @ ./array.jl:317 [inlined]
-     [11] copyto!
-        @ ./array.jl:343 [inlined]
-     [12] copyto_axcheck!
-        @ ./abstractarray.jl:1127 [inlined]
-     [13] Array
-        @ ./array.jl:626 [inlined]
-     [14] convert
-        @ ./array.jl:617 [inlined]
-     [15] push!(a::Vector{Vector{SVector{3, Quantity{Float64, 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, nm⁻¹, mol⁻¹), 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}}}, item::Vector{SVector{3, Quantity{Float64, 𝐋 𝐌 𝐓⁻², Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}}}})
-        @ Base ./array.jl:1057
-     [16] log_property!(logger::GeneralObservableLogger{Vector{SVector{3, Quantity{Float64, 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, nm⁻¹, mol⁻¹), 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}}, typeof(forces)}, s::System{3, false, Float64, false, Vector{Molly.Atom{Float64, Quantity{Float64, 𝐌, Unitful.FreeUnits{(u,), 𝐌, nothing}}, Quantity{Float64, 𝐋, Unitful.FreeUnits{(nm,), 𝐋, nothing}}, Quantity{Float64, 𝐋² 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, mol⁻¹), 𝐋² 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}}, Vector{AtomData}, Tuple{}, Tuple{}, Tuple{InteratomicPotentialInter{InteratomicPotentials.LennardJones{Float64}}}, Tuple{}, Vector{SVector{3, Quantity{Float64, 𝐋, Unitful.FreeUnits{(Å,), 𝐋, nothing}}}}, Vector{SVector{3, Quantity{Float64, 𝐋 𝐓⁻¹, Unitful.FreeUnits{(a₀, s⁻¹), 𝐋 𝐓⁻¹, nothing}}}}, CubicBoundary{Quantity{Float64, 𝐋, Unitful.FreeUnits{(Å,), 𝐋, nothing}}}, NoNeighborFinder, NamedTuple{(:force,), Tuple{GeneralObservableLogger{Vector{SVector{3, Quantity{Float64, 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, nm⁻¹, mol⁻¹), 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}}, typeof(forces)}}}, Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}, Unitful.FreeUnits{(kJ, mol⁻¹), 𝐋² 𝐌 𝐍⁻¹ 𝐓⁻², nothing}, Quantity{Float64, 𝐋² 𝐌 𝚯⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, K⁻¹), 𝐋² 𝐌 𝚯⁻¹ 𝐓⁻², nothing}}}, neighbors::Nothing, step_n::Int64; n_threads::Int64, kwargs::Base.Pairs{Symbol, Union{}, Tuple{}, NamedTuple{(), Tuple{}}})
-        @ Molly ~/.julia/packages/Molly/SIRC5/src/loggers.jl:72
-     [17] #run_loggers!#195
-        @ ~/.julia/packages/Molly/SIRC5/src/loggers.jl:31 [inlined]
-     [18] simulate!(sys::System{3, false, Float64, false, Vector{Molly.Atom{Float64, Quantity{Float64, 𝐌, Unitful.FreeUnits{(u,), 𝐌, nothing}}, Quantity{Float64, 𝐋, Unitful.FreeUnits{(nm,), 𝐋, nothing}}, Quantity{Float64, 𝐋² 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, mol⁻¹), 𝐋² 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}}, Vector{AtomData}, Tuple{}, Tuple{}, Tuple{InteratomicPotentialInter{InteratomicPotentials.LennardJones{Float64}}}, Tuple{}, Vector{SVector{3, Quantity{Float64, 𝐋, Unitful.FreeUnits{(Å,), 𝐋, nothing}}}}, Vector{SVector{3, Quantity{Float64, 𝐋 𝐓⁻¹, Unitful.FreeUnits{(a₀, s⁻¹), 𝐋 𝐓⁻¹, nothing}}}}, CubicBoundary{Quantity{Float64, 𝐋, Unitful.FreeUnits{(Å,), 𝐋, nothing}}}, NoNeighborFinder, NamedTuple{(:force,), Tuple{GeneralObservableLogger{Vector{SVector{3, Quantity{Float64, 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, nm⁻¹, mol⁻¹), 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}}, typeof(forces)}}}, Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}, Unitful.FreeUnits{(kJ, mol⁻¹), 𝐋² 𝐌 𝐍⁻¹ 𝐓⁻², nothing}, Quantity{Float64, 𝐋² 𝐌 𝚯⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, K⁻¹), 𝐋² 𝐌 𝚯⁻¹ 𝐓⁻², nothing}}}, sim::VelocityVerlet{Quantity{Float64, 𝐓, Unitful.FreeUnits{(ps,), 𝐓, nothing}}, AndersenThermostat{Quantity{Int64, 𝚯, Unitful.FreeUnits{(K,), 𝚯, nothing}}, Quantity{Float64, 𝐓, Unitful.FreeUnits{(ps,), 𝐓, nothing}}}}, n_steps::Int64; n_threads::Int64)
-        @ Molly ~/.julia/packages/Molly/SIRC5/src/simulators.jl:143
-     [19] simulate!(sys::System{3, false, Float64, false, Vector{Molly.Atom{Float64, Quantity{Float64, 𝐌, Unitful.FreeUnits{(u,), 𝐌, nothing}}, Quantity{Float64, 𝐋, Unitful.FreeUnits{(nm,), 𝐋, nothing}}, Quantity{Float64, 𝐋² 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, mol⁻¹), 𝐋² 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}}, Vector{AtomData}, Tuple{}, Tuple{}, Tuple{InteratomicPotentialInter{InteratomicPotentials.LennardJones{Float64}}}, Tuple{}, Vector{SVector{3, Quantity{Float64, 𝐋, Unitful.FreeUnits{(Å,), 𝐋, nothing}}}}, Vector{SVector{3, Quantity{Float64, 𝐋 𝐓⁻¹, Unitful.FreeUnits{(a₀, s⁻¹), 𝐋 𝐓⁻¹, nothing}}}}, CubicBoundary{Quantity{Float64, 𝐋, Unitful.FreeUnits{(Å,), 𝐋, nothing}}}, NoNeighborFinder, NamedTuple{(:force,), Tuple{GeneralObservableLogger{Vector{SVector{3, Quantity{Float64, 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, nm⁻¹, mol⁻¹), 𝐋 𝐌 𝐍⁻¹ 𝐓⁻², nothing}}}}, typeof(forces)}}}, Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}, Unitful.FreeUnits{(kJ, mol⁻¹), 𝐋² 𝐌 𝐍⁻¹ 𝐓⁻², nothing}, Quantity{Float64, 𝐋² 𝐌 𝚯⁻¹ 𝐓⁻², Unitful.FreeUnits{(kJ, K⁻¹), 𝐋² 𝐌 𝚯⁻¹ 𝐓⁻², nothing}}}, sim::VelocityVerlet{Quantity{Float64, 𝐓, Unitful.FreeUnits{(ps,), 𝐓, nothing}}, AndersenThermostat{Quantity{Int64, 𝚯, Unitful.FreeUnits{(K,), 𝚯, nothing}}, Quantity{Float64, 𝐓, Unitful.FreeUnits{(ps,), 𝐓, nothing}}}}, n_steps::Int64)
-        @ Molly ~/.julia/packages/Molly/SIRC5/src/simulators.jl:136
-     [20] top-level scope
-        @ ~/exploratory/public/interpot_comparisons/lj/no_pluto/fcc_argon_lj_via_molly.jl:730
-"""
 
-# letting the force_units be the default
+f_p_molly = m_sys.loggers.force.history[1] # outputs units as eV/Å, but values weren't actually converted
+
 # Hacky conversion. Need to strip it of the wrong units, append the correct units, then convert to eV/A 
 f_check =  map(x->uconvert.(u"eV/Å", ustrip.(x)*u"Eh_au/a0_au"), m_sys.loggers.force.history[1])
 """
