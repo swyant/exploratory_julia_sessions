@@ -2,4 +2,4 @@ A second file, B.
 
 Adding this line here. Cool!
 
-Cool name, huh
+Cool name, huh?
