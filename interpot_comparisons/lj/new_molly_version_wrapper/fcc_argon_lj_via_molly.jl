@@ -14,18 +14,18 @@ struct InteratomicPotentialInter{P<:AbstractPotential}
 end
 
 # Extending Molly.forces with above struct
-function Molly.forces(inter::InteratomicPotentialInter, sys::AbstractSystem, neighbors=nothing)
+function Molly.forces(inter::InteratomicPotentialInter, sys::AbstractSystem, neighbors=nothing; n_threads=Threads.nthreads())
     eandf = inter.eaf(sys, inter.potential)
     eandf.f
 end
 
 function molly_params(sys::AtomsBase.AbstractSystem)
-    coords = position(sys) 
+    coords = [SVector{3}(pos) for pos in position(sys)] 
 
     atoms = [Molly.Atom(mass=atm_mass) for atm_mass in atomic_mass(sys)]
     atoms_data = [AtomData(element=string(atm_symbol)) for atm_symbol in atomic_symbol(sys)]
-    velocities = velocity(sys)
-
+    #velocities = velocity(sys)
+    velocities = [SVector{3}(vel) for vel in velocity(sys)] 
     # TODO: Generalize this. Currently very fragile, assumes you read in a cubic box. Otherwise need to use TriclinicBoundary, but some limitations...
     # Also by default, assumes directions are periodic..., ignoring sys.boundary_conditions
     bbox = bounding_box(sys)
@@ -72,10 +72,7 @@ simulator = VelocityVerlet(
 
 simulate!(m_sys,simulator,0)
 
-f_p_molly = m_sys.loggers.force.history[1] # outputs units as eV/Å, but values weren't actually converted
-
-# Hacky conversion. Need to strip it of the wrong units, append the correct units, then convert to eV/A 
-f_check =  map(x->uconvert.(u"eV/Å", ustrip.(x)*u"Eh_au/a0_au"), m_sys.loggers.force.history[1])
+f_check = [f for f in m_sys.loggers.force.history[1]]
 """
 1536-element Vector{SVector{3, Quantity{Float64, 𝐋 𝐌 𝐓⁻², Unitful.FreeUnits{(Å⁻¹, eV), 𝐋 𝐌 𝐓⁻², nothing}}}}:
  [0.001980826856892926 eV Å⁻¹, 0.020532665135586135 eV Å⁻¹, -0.017177486149641766 eV Å⁻¹]
