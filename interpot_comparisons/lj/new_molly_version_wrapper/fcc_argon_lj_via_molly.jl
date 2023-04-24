@@ -1,8 +1,7 @@
 using Molly
 using InteratomicPotentials
-using AtomsIO # .CondaPkg/ comes from this, but shouldn't with newest version
+using AtomsIO 
 using Unitful
-using UnitfulAtomic
 using AtomsBase
  
 # Wrapper struct enabling potentials implemented in InteratomicPotentials.jl to be used in Molly
@@ -21,13 +20,12 @@ end
 
 function molly_params(sys::AtomsBase.AbstractSystem)
     coords = [SVector{3}(pos) for pos in position(sys)] # need to be SVector for zero() func to work
-
     atoms = [Molly.Atom(mass=atm_mass) for atm_mass in atomic_mass(sys)]
     atoms_data = [AtomData(element=string(atm_symbol)) for atm_symbol in atomic_symbol(sys)]
-    #velocities = velocity(sys)
     velocities = [SVector{3}(vel) for vel in velocity(sys)] 
+
     # TODO: Generalize this. Currently very fragile, assumes you read in a cubic box. Otherwise need to use TriclinicBoundary, but some limitations...
-    # Also by default, assumes directions are periodic..., ignoring sys.boundary_conditions
+    # Also by default, assumes directions are periodic..., ignoring boundary_conditions
     bbox = bounding_box(sys)
     boundary=CubicBoundary(bbox[1][1],bbox[2][2],bbox[3][3]) # FRAGILE! 
 
