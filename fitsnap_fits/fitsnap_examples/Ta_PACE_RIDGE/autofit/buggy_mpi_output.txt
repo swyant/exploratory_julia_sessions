@@ -1,0 +1,221 @@
+/opt/homebrew/Caskroom/miniforge/base/envs/fitsnap/lib/python3.10/site-packages/lammps/mliap/__init__.py:29: UserWarning: This interpreter is not compatible with python-based MLIAP for LAMMPS. Attempting to activate the MLIAP-python coupling from python may result in undefined behavior.
+  warnings.warn("This interpreter is not compatible with python-based MLIAP for LAMMPS. "
+/opt/homebrew/Caskroom/miniforge/base/envs/fitsnap/lib/python3.10/site-packages/lammps/mliap/__init__.py:29: UserWarning: This interpreter is not compatible with python-based MLIAP for LAMMPS. Attempting to activate the MLIAP-python coupling from python may result in undefined behavior.
+  warnings.warn("This interpreter is not compatible with python-based MLIAP for LAMMPS. "
+clear
+clear
+units metal
+atom_style atomic
+                        atom_modify map array sort 0 2.0
+units metal
+atom_style atomic
+                        box tilt large
+boundary p p p
+                        atom_modify map array sort 0 2.0
+                        box tilt large
+boundary p p p
+region pybox prism 0 10.600000381499999236 0 10.600000381499999236 0 10.600000381499999236                    0                    0                    0
+create_box 1 pybox
+region pybox prism 0 10.600000381499999236 0 10.600000381499999236 0 10.600000381499999236                    0                    0                    0
+create_box 1 pybox
+create_atoms 1 single 10.544969999999999288 10.545510000000000161 10.595599999999999241 remap yes
+create_atoms 1 single 10.544969999999999288 10.545510000000000161 10.595599999999999241 remap yes
+create_atoms 1 single 2.6057999999999998941 2.5957699999999999108 2.6627600000000000158 remap yes
+create_atoms 1 single 2.6057999999999998941 2.5957699999999999108 2.6627600000000000158 remap yes
+create_atoms 1 single 1.2933799999999999741 2.6273699999999999832 0.066589999999999996416 remap yes
+create_atoms 1 single 1.2933799999999999741 2.6273699999999999832 0.066589999999999996416 remap yes
+create_atoms 1 single 3.978590000000000515 2.6007400000000000517 0.052260000000000007836 remap yes
+create_atoms 1 single 3.978590000000000515 2.6007400000000000517 0.052260000000000007836 remap yes
+create_atoms 1 single 0.06826000000000000123 1.2632200000000002316 2.6710800000000003429 remap yes
+create_atoms 1 single 0.034889999999999997404 4.0060000000000011156 2.580880000000000063 remap yes
+create_atoms 1 single 0.06826000000000000123 1.2632200000000002316 2.6710800000000003429 remap yes
+create_atoms 1 single 0.034889999999999997404 4.0060000000000011156 2.580880000000000063 remap yes
+create_atoms 1 single 2.6040400000000003544 0.032090000000000000469 1.2757300000000000306 remap yes
+create_atoms 1 single 2.6040400000000003544 0.032090000000000000469 1.2757300000000000306 remap yes
+create_atoms 1 single 2.6138400000000001633 0.039780000000000002858 4.0001699999999997814 remap yes
+create_atoms 1 single 2.6138400000000001633 0.039780000000000002858 4.0001699999999997814 remap yes
+create_atoms 1 single 5.2673100000000001586 10.539090000000001623 0.052500000000000004996 remap yes
+create_atoms 1 single 5.2673100000000001586 10.539090000000001623 0.052500000000000004996 remap yes
+create_atoms 1 single 8.0037500000000001421 2.6490200000000001523 2.692070000000000185 remap yes
+create_atoms 1 single 8.0037500000000001421 2.6490200000000001523 2.692070000000000185 remap yes
+create_atoms 1 single 6.644260000000000943 2.661300000000000221 10.540000000000000924 remap yes
+create_atoms 1 single 6.644260000000000943 2.661300000000000221 10.540000000000000924 remap yes
+create_atoms 1 single 9.3382400000000007623 2.6445700000000003094 0.031060000000000004272 remap yes
+create_atoms 1 single 9.3382400000000007623 2.6445700000000003094 0.031060000000000004272 remap yes
+create_atoms 1 single 5.3521999999999998465 1.2664999999999999591 2.5670999999999999375 remap yes
+create_atoms 1 single 5.3521999999999998465 1.2664999999999999591 2.5670999999999999375 remap yes
+create_atoms 1 single 5.2765500000000011838 4.049030000000000129 2.6501100000000006318 remap yes
+create_atoms 1 single 5.2765500000000011838 4.049030000000000129 2.6501100000000006318 remap yes
+create_atoms 1 single 7.9997000000000006992 10.543839999999999435 1.3323000000000002618 remap yes
+create_atoms 1 single 7.9997000000000006992 10.543839999999999435 1.3323000000000002618 remap yes
+create_atoms 1 single 7.9796100000000000918 10.598140000000000782 4.0236299999999998178 remap yes
+create_atoms 1 single 7.9796100000000000918 10.598140000000000782 4.0236299999999998178 remap yes
+create_atoms 1 single 0.077030000000000015126 5.3611399999999997945 0.026990000000000003572 remap yes
+create_atoms 1 single 0.077030000000000015126 5.3611399999999997945 0.026990000000000003572 remap yes
+create_atoms 1 single 2.6646000000000005237 7.9372500000000005826 2.6095500000000004803 remap yes
+create_atoms 1 single 2.6646000000000005237 7.9372500000000005826 2.6095500000000004803 remap yes
+create_atoms 1 single 1.4037900000000003153 7.9666800000000002058 10.52251000000000225 remap yes
+create_atoms 1 single 1.4037900000000003153 7.9666800000000002058 10.52251000000000225 remap yes
+create_atoms 1 single 3.9903500000000002856 7.9942299999999999471 10.597709999999999297 remap yes
+create_atoms 1 single 3.9903500000000002856 7.9942299999999999471 10.597709999999999297 remap yes
+create_atoms 1 single 0.043549999999999998435 6.5688900000000005619 2.6272700000000006604 remap yes
+create_atoms 1 single 0.043549999999999998435 6.5688900000000005619 2.6272700000000006604 remap yes
+create_atoms 1 single 0.0070300000000000006581 9.2875700000000005474 2.6836400000000004695 remap yes
+create_atoms 1 single 0.0070300000000000006581 9.2875700000000005474 2.6836400000000004695 remap yes
+create_atoms 1 single 2.5695700000000005758 5.3414100000000006574 1.3389300000000001756 remap yes
+create_atoms 1 single 2.5695700000000005758 5.3414100000000006574 1.3389300000000001756 remap yes
+create_atoms 1 single 2.7244700000000001694 5.2537500000000010303 4.040370000000000239 remap yes
+create_atoms 1 single 2.7244700000000001694 5.2537500000000010303 4.040370000000000239 remap yes
+create_atoms 1 single 10.536840000000001538 10.575900000000000745 5.2221000000000001862 remap yes
+create_atoms 1 single 10.536840000000001538 10.575900000000000745 5.2221000000000001862 remap yes
+create_atoms 1 single 2.6691300000000004466 2.7096000000000004526 7.9472300000000011266 remap yes
+create_atoms 1 single 2.6691300000000004466 2.7096000000000004526 7.9472300000000011266 remap yes
+create_atoms 1 single 1.3543800000000001393 2.6836400000000004695 5.2335799999999998988 remap yes
+create_atoms 1 single 1.3543800000000001393 2.6836400000000004695 5.2335799999999998988 remap yes
+create_atoms 1 single 3.929140000000000299 2.5765200000000003655 5.2183100000000006702 remap yes
+create_atoms 1 single 3.929140000000000299 2.5765200000000003655 5.2183100000000006702 remap yes
+create_atoms 1 single 0.081519999999999995244 1.317370000000000152 7.9010300000000013299 remap yes
+create_atoms 1 single 0.081519999999999995244 1.317370000000000152 7.9010300000000013299 remap yes
+create_atoms 1 single 0.015959999999999998493 3.9426800000000001845 7.9939300000000006463 remap yes
+create_atoms 1 single 0.015959999999999998493 3.9426800000000001845 7.9939300000000006463 remap yes
+create_atoms 1 single 2.6785000000000005471 10.527789999999999537 6.6355700000000004124 remap yes
+create_atoms 1 single 2.6785000000000005471 10.527789999999999537 6.6355700000000004124 remap yes
+create_atoms 1 single 2.575629999999999864 10.539799999999999613 9.2006599999999991724 remap yes
+create_atoms 1 single 5.2802600000000001756 5.2907999999999999474 10.538740000000000663 remap yes
+create_atoms 1 single 8.0211600000000000676 8.0030099999999997351 2.5679099999999999149 remap yes
+create_atoms 1 single 2.575629999999999864 10.539799999999999613 9.2006599999999991724 remap yes
+create_atoms 1 single 5.2802600000000001756 5.2907999999999999474 10.538740000000000663 remap yes
+create_atoms 1 single 8.0211600000000000676 8.0030099999999997351 2.5679099999999999149 remap yes
+create_atoms 1 single 6.5612599999999998701 7.9104000000000009862 0.044569999999999998508 remap yes
+create_atoms 1 single 6.5612599999999998701 7.9104000000000009862 0.044569999999999998508 remap yes
+create_atoms 1 single 9.2648499999999991417 7.955079999999999707 10.58594000000000257 remap yes
+create_atoms 1 single 9.2648499999999991417 7.955079999999999707 10.58594000000000257 remap yes
+create_atoms 1 single 5.2610299999999998732 6.6284200000000010888 2.6326500000000003787 remap yes
+create_atoms 1 single 5.2610299999999998732 6.6284200000000010888 2.6326500000000003787 remap yes
+create_atoms 1 single 5.2895500000000001961 9.2396799999999998931 2.5672999999999999154 remap yes
+create_atoms 1 single 5.2895500000000001961 9.2396799999999998931 2.5672999999999999154 remap yes
+create_atoms 1 single 8.0022099999999998232 5.3327600000000003888 1.3413200000000002898 remap yes
+create_atoms 1 single 8.0022099999999998232 5.3327600000000003888 1.3413200000000002898 remap yes
+create_atoms 1 single 7.9186400000000007893 5.2842299999999999827 3.9789099999999999469 remap yes
+create_atoms 1 single 7.9186400000000007893 5.2842299999999999827 3.9789099999999999469 remap yes
+create_atoms 1 single 5.2703700000000006654 0.011770000000000000948 5.3196700000000012309 remap yes
+create_atoms 1 single 5.2703700000000006654 0.011770000000000000948 5.3196700000000012309 remap yes
+create_atoms 1 single 7.9757699999999998042 2.5884599999999999831 7.9028400000000011971 remap yes
+create_atoms 1 single 7.9757699999999998042 2.5884599999999999831 7.9028400000000011971 remap yes
+create_atoms 1 single 6.6711100000000005394 2.7094500000000003581 5.3143299999999999983 remap yes
+create_atoms 1 single 6.6711100000000005394 2.7094500000000003581 5.3143299999999999983 remap yes
+create_atoms 1 single 9.2902500000000003411 2.5810500000000002885 5.2906600000000008066 remap yes
+create_atoms 1 single 9.2902500000000003411 2.5810500000000002885 5.2906600000000008066 remap yes
+create_atoms 1 single 5.2532000000000005357 1.2679499999999999105 7.9179899999999996396 remap yes
+create_atoms 1 single 5.2532000000000005357 1.2679499999999999105 7.9179899999999996396 remap yes
+create_atoms 1 single 5.327030000000000598 4.0474699999999996791 7.8762199999999999989 remap yes
+create_atoms 1 single 5.327030000000000598 4.0474699999999996791 7.8762199999999999989 remap yes
+create_atoms 1 single 7.8991000000000006764 10.565760000000000929 6.6840500000000009351 remap yes
+create_atoms 1 single 7.8991000000000006764 10.565760000000000929 6.6840500000000009351 remap yes
+create_atoms 1 single 8.0153900000000000148 10.548730000000000828 9.3217700000000007776 remap yes
+create_atoms 1 single 8.0153900000000000148 10.548730000000000828 9.3217700000000007776 remap yes
+create_atoms 1 single 10.590550000000002129 5.2337300000000004374 5.2911200000000011556 remap yes
+create_atoms 1 single 2.7177999999999999936 8.0201700000000002433 8.0199599999999993116 remap yes
+create_atoms 1 single 10.590550000000002129 5.2337300000000004374 5.2911200000000011556 remap yes
+create_atoms 1 single 2.7177999999999999936 8.0201700000000002433 8.0199599999999993116 remap yes
+create_atoms 1 single 1.2875499999999999723 7.9538200000000012224 5.3594699999999999562 remap yes
+create_atoms 1 single 1.2875499999999999723 7.9538200000000012224 5.3594699999999999562 remap yes
+create_atoms 1 single 3.9814899999999999736 8.0071200000000004593 5.2793499999999999872 remap yes
+create_atoms 1 single 3.9814899999999999736 8.0071200000000004593 5.2793499999999999872 remap yes
+create_atoms 1 single 0.047710000000000002407 6.7013000000000007006 8.0254100000000008208 remap yes
+create_atoms 1 single 0.047710000000000002407 6.7013000000000007006 8.0254100000000008208 remap yes
+create_atoms 1 single 10.534539999999999793 9.2753800000000001802 7.9458600000000005892 remap yes
+create_atoms 1 single 10.534539999999999793 9.2753800000000001802 7.9458600000000005892 remap yes
+create_atoms 1 single 2.6038399999999999324 5.3782600000000000406 6.6523700000000012267 remap yes
+create_atoms 1 single 2.6038399999999999324 5.3782600000000000406 6.6523700000000012267 remap yes
+create_atoms 1 single 2.6502599999999998381 5.2578200000000006042 9.2759099999999996555 remap yes
+create_atoms 1 single 2.6502599999999998381 5.2578200000000006042 9.2759099999999996555 remap yes
+create_atoms 1 single 5.3097500000000001918 5.3354799999999995563 5.2586300000000010257 remap yes
+create_atoms 1 single 5.3097500000000001918 5.3354799999999995563 5.2586300000000010257 remap yes
+create_atoms 1 single 7.9815200000000006142 7.9314700000000000202 7.9472700000000005005 remap yes
+create_atoms 1 single 7.9815200000000006142 7.9314700000000000202 7.9472700000000005005 remap yes
+create_atoms 1 single 6.5833600000000007668 7.999559999999999782 5.3353000000000010417 remap yes
+create_atoms 1 single 9.2051800000000003621 8.0016499999999997073 5.3421099999999999142 remap yes
+create_atoms 1 single 6.5833600000000007668 7.999559999999999782 5.3353000000000010417 remap yes
+create_atoms 1 single 9.2051800000000003621 8.0016499999999997073 5.3421099999999999142 remap yes
+create_atoms 1 single 5.2881299999999997752 6.6778100000000009118 8.017039999999999722 remap yes
+create_atoms 1 single 5.2968000000000001748 9.2068700000000003314 7.9681800000000002626 remap yes
+create_atoms 1 single 5.2881299999999997752 6.6778100000000009118 8.017039999999999722 remap yes
+create_atoms 1 single 5.2968000000000001748 9.2068700000000003314 7.9681800000000002626 remap yes
+create_atoms 1 single 7.9038199999999996237 5.2579400000000005022 6.6235799999999995791 remap yes
+create_atoms 1 single 7.9038199999999996237 5.2579400000000005022 6.6235799999999995791 remap yes
+create_atoms 1 single 8.0007199999999993878 5.2862100000000005195 9.2635600000000000165 remap yes
+create_atoms 1 single 8.0007199999999993878 5.2862100000000005195 9.2635600000000000165 remap yes
+variable rcutfac equal 4.25
+pair_style hybrid/overlay zero 4.25
+pair_coeff * * zero
+variable rcutfac equal 4.25
+compute pace all pace coupling_coefficients.yace 0 0
+pair_style hybrid/overlay zero 4.25
+pair_coeff * * zero
+compute pace all pace coupling_coefficients.yace 0 0
+mass * 1.0e-20
+neighbor 1.0e-20 nsq
+neigh_modify one 10000
+run 0
+mass * 1.0e-20
+neighbor 1.0e-20 nsq
+neigh_modify one 10000
+run 0
+Traceback (most recent call last):
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/calculators/lammps_base.py", line 67, in process_configs
+    self._collect_lammps()
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/calculators/lammps_pace.py", line 355, in _collect_lammps
+    assert np.all(lmp_atom_ids == 1 + np.arange(num_atoms)), "LAMMPS seems to have lost atoms"
+AssertionError: LAMMPS seems to have lost atoms
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/swyant/cesmix/exploratory/public/fitsnap_fits/fitsnap_examples/Ta_PACE_RIDGE/autofit/auto_fit_this.py", line 116, in <module>
+    snap.process_configs()
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/fitsnap.py", line 185, in process_configs
+Traceback (most recent call last):
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/calculators/lammps_base.py", line 67, in process_configs
+    self._collect_lammps()
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/calculators/lammps_pace.py", line 355, in _collect_lammps
+    process_configs()
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/parallel_tools.py", line 291, in timed
+    assert np.all(lmp_atom_ids == 1 + np.arange(num_atoms)), "LAMMPS seems to have lost atoms"
+AssertionError: LAMMPS seems to have lost atoms
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/swyant/cesmix/exploratory/public/fitsnap_fits/fitsnap_examples/Ta_PACE_RIDGE/autofit/auto_fit_this.py", line 116, in <module>
+    snap.process_configs()
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/fitsnap.py", line 185, in process_configs
+    result = method(*args, **kw)
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/fitsnap.py", line 172, in process_configs
+    self.calculator.process_configs(configuration, i)
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/calculators/lammps_base.py", line 76, in process_configs
+    self._collect_lammps()
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/calculators/lammps_pace.py", line 355, in _collect_lammps
+    assert np.all(lmp_atom_ids == 1 + np.arange(num_atoms)), "LAMMPS seems to have lost atoms"
+AssertionError: LAMMPS seems to have lost atoms
+    process_configs()
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/parallel_tools.py", line 291, in timed
+    result = method(*args, **kw)
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/fitsnap.py", line 172, in process_configs
+    self.calculator.process_configs(configuration, i)
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/calculators/lammps_base.py", line 76, in process_configs
+    self._collect_lammps()
+  File "/Users/swyant/local_software/fitsnap/FitSNAP/fitsnap3lib/calculators/lammps_pace.py", line 355, in _collect_lammps
+    assert np.all(lmp_atom_ids == 1 + np.arange(num_atoms)), "LAMMPS seems to have lost atoms"
+AssertionError: LAMMPS seems to have lost atoms
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[33966,1],0]
+  Exit code:    1
+--------------------------------------------------------------------------

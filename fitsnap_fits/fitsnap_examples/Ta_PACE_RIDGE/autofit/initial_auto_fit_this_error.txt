@@ -1,0 +1,6 @@
+# python auto_fit_this.py 2> initial_auto_fit_this_error.txt 
+
+Traceback (most recent call last):
+  File "/Users/swyant/cesmix/exploratory/public/fitsnap_fits/fitsnap_examples/Ta_PACE_RIDGE/autofit/auto_fit_this.py", line 84, in <module>
+    config = Config(arguments_lst = ["Ta.in", "--overwrite"])
+TypeError: Config.__init__() missing 1 required positional argument: 'pt'

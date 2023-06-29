@@ -81,7 +81,8 @@ def change_weights(config, data):
 from fitsnap3lib.tools.dataframe_tools import DataframeTools
 from fitsnap3lib.parallel_tools import ParallelTools
 from fitsnap3lib.io.input import Config
-config = Config(arguments_lst = ["Ta.in", "--overwrite"])
+pt = ParallelTools()
+config = Config(pt,arguments_lst = ["Ta.in", "--overwrite"])
 from fitsnap3lib.fitsnap import FitSnap
 
 ngenerations = 2
@@ -89,9 +90,9 @@ for g in range(0,ngenerations):
 
 	# instantiate library objects
 
-	pt = ParallelTools()
+	#pt = ParallelTools()
 	#config = Config(arguments_lst = ["Ta.in", "--overwrite"])
-	snap = FitSnap()
+	snap = FitSnap(arglist = ["Ta.in", "--overwrite"])
 
 	# scrape configs
 
