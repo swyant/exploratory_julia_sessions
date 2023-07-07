@@ -1,0 +1,80 @@
+--------------------------------------------------------------------------
+WARNING: No preset parameters were found for the device that Open MPI
+detected:
+
+  Local host:            node1180
+  Device name:           mlx5_0
+  Device vendor ID:      0x02c9
+  Device vendor part ID: 4119
+
+Default device parameters will be used, which may result in lower
+performance.  You can edit any of the files specified by the
+btl_openib_device_param_files MCA parameter to set values for your
+device.
+
+NOTE: You can turn off this warning by setting the MCA parameter
+      btl_openib_warn_no_device_params_found to 0.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+[[37143,1],34]: A high-performance Open MPI point-to-point messaging module
+was unable to find any relevant network interfaces:
+
+Module: usNIC
+  Host: node1180
+
+Another transport will be used instead, although this may result in
+lower performance.
+--------------------------------------------------------------------------
+LAMMPS (29 Sep 2021)
+Reading data file ...
+  orthogonal box = (0.0000000 0.0000000 0.0000000) to (21.105599 21.105599 126.63359)
+  2 by 2 by 10 MPI processor grid
+  reading atoms ...
+  1536 atoms
+  read_data CPU = 0.017 seconds
+WARNING: No fixes defined, atoms won't move (../verlet.cpp:55)
+Neighbor list info ...
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 10.51
+  ghost atom cutoff = 10.51
+  binsize = 5.255, bins = 5 5 25
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/cut, perpetual
+      attributes: half, newton on
+      pair build: half/bin/atomonly/newton
+      stencil: half/bin/3d
+      bin: standard
+Setting up Verlet run ...
+  Unit style    : metal
+  Current step  : 0
+  Time step     : 0.001
+Per MPI rank memory allocation (min/avg/max) = 4.361 | 4.362 | 4.362 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0            0   -112.96111            0   -112.96111     2222.306 
+Loop time of 7.71761e-05 on 40 procs for 0 steps with 1536 atoms
+
+68.0% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 7.718e-05  |            |       |100.00
+
+Nlocal:        38.4000 ave          40 max          32 min
+Histogram: 3 0 3 2 0 0 2 3 0 27
+Nghost:        880.275 ave         896 max         830 min
+Histogram: 6 2 0 0 0 0 0 5 3 24
+Neighs:        2617.95 ave        2834 max        2171 min
+Histogram: 3 2 1 1 1 2 7 10 0 13
+
+Total # of neighbors = 104718
+Ave neighs/atom = 68.175781
+Neighbor list builds = 0
+Dangerous builds = 0
+Total wall time: 0:00:00
