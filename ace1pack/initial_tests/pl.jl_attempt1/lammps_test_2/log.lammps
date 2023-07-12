@@ -1,0 +1,72 @@
+LAMMPS (15 Jun 2023)
+units          metal
+boundary       p p p
+atom_style     atomic
+
+read_data      TiAl_example_DATA
+Reading data file ...
+  orthogonal box = (0 0 0) to (8.4559072 8.4559072 12.192277)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  54 atoms
+  read_data CPU = 0.002 seconds
+
+pair_style     pace
+ACE version: 2022.6.27
+Recursive evaluator is used
+pair_coeff     * * newtest.yace Ti Al
+Loading newtest.yace
+Total number of basis functions
+	Al: 12 (r=1) 52 (r>1)
+	Ti: 12 (r=1) 52 (r>1)
+Mapping LAMMPS atom type #1(Ti) -> ACE species type #1
+Mapping LAMMPS atom type #2(Al) -> ACE species type #0
+
+dump           final_check all custom 1 dump_final_check.custom id type x y z fx fy fz
+dump_modify    final_check sort id element Ti Al format line "%4d %1d %21.16f %21.16f %21.16f %21.16f %21.16f %21.16f"
+
+run 0
+WARNING: No fixes with time integration, atoms won't move (src/verlet.cpp:60)
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 7.5
+  ghost atom cutoff = 7.5
+  binsize = 3.75, bins = 3 3 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair pace, perpetual
+      attributes: full, newton on
+      pair build: full/bin/atomonly
+      stencil: full/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 3.088 | 3.088 | 3.088 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+         0   0             -26.526437      0             -26.526437     -161241.44    
+Loop time of 3.34e-07 on 1 procs for 0 steps with 54 atoms
+
+299.4% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 3.34e-07   |            |       |100.00
+
+Nlocal:             54 ave          54 max          54 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:            871 ave         871 max         871 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:         5860 ave        5860 max        5860 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 5860
+Ave neighs/atom = 108.51852
+Neighbor list builds = 0
+Dangerous builds = 0
+Total wall time: 0:00:01
