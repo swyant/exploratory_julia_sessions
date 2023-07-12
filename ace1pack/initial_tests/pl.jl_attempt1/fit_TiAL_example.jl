@@ -121,4 +121,4 @@ f_descr_train = compute_force_descriptors(conf_train, ace)
 ds_train = DataSet(conf_train .+ f_descr_train)
 
 lb = LBasisPotential(ace)
-lb, Σ = learn!(lb, conf_train; α=1e-6)
+lb, Σ = learn!(lb, ds_train; α=1e-6)

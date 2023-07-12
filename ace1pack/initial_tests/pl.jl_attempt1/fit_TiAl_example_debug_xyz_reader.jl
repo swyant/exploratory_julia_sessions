@@ -72,9 +72,13 @@ open(ds_path, "r") do io
                     ft = Symbol(line[line_count])
                     line_count += 1
 #                elseif prop[1] == "forces" . # it's force, not forces in this xyz file
-                elseif prop[1] == "forces" | prop[1] == "force"
+                elseif prop[1] == "forces" || prop[1] == "force"
 
                     @show check_parse = parse.(T, line[line_count:line_count+2])
+                    @show check_force =Force(
+                                        parse.(T, line[line_count:line_count+2]),
+                                        extxyz.energy_units / extxyz.distance_units,
+                                        ) 
                     push!(
                         forces,
                         Force(
