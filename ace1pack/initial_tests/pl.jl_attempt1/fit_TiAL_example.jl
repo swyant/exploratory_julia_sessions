@@ -3,7 +3,8 @@ using InteratomicPotentials, InteratomicBasisPotentials
 using Unitful, UnitfulAtomic
 using AtomsBase 
 using StaticArrays
-
+using ACE1pack, ACE1x
+using JuLIP
 #### Custom functions #####
 function fixed_load_data(file, extxyz::ExtXYZ; T=Float64)
     configs = Configuration[]
@@ -101,6 +102,39 @@ function fixed_load_data(file, extxyz::ExtXYZ; T=Float64)
     return DataSet(configs)
 end
 
+# TODO: update this to auto-detect elements from rpib
+# TODO: auto-delete .table files since they're junk
+function mock_export2lammps(fname, lb::LinearBasisPotential)
+    @assert typeof(lb.basis) == ACE
+
+    mock_kwargs = Dict( :pair_basis     => :legendre,
+                        :elements       => [:Ti,:Al],
+                        :pair_degree    => 6,
+                        :pair_rcut      => 5.5,
+                        :pair_transform => (:agnesi,1,3),
+                        :pair_envelope  => (:r,2),
+                        :r0             => :bondlen,
+                        :rcut           => 5.5)
+    
+    pairb = ACE1x._pair_basis(mock_kwargs)
+    pairb_length = length(pairb)
+    
+    rpib  = lb.basis.rpib
+    super_basis = JuLIP.MLIPs.IPSuperBasis([pairb,rpib])
+
+    rpib_params = copy(lb.β)
+    params = prepend!(rpib_params,randn(pairb_length))
+    pot_novref = JuLIP.MLIPs.combine(super_basis,params)
+
+    Eref = [:Ti => 0.0, :Al => 0.0]
+    vref = JuLIP.OneBody(Eref...)
+
+    pot = JuLIP.MLIPs.SumIP([pot_novref.components...,vref])
+
+    mock_ace1model = ACE1x.ACE1Model(super_basis,params,vref,pot,Dict())
+    ACE1pack.export2lammps(fname, mock_ace1model) # I can't seem to call the export2lammps that directly uses the potential, not ace1model
+    
+end
 #######################################################################################################
 
 ds_path = "/Users/swyant/.julia/artifacts/b437d7d5fac4424b8203d0afc31732879d3da5b2/TiAl_tutorial.xyz" 
@@ -124,8 +158,17 @@ ds_train = DataSet(conf_train .+ f_descr_train)
 lb = LBasisPotential(ace)
 lb, Σ = learn!(lb, ds_train; α=1e-6)
 
+mock_export2lammps("PL_example_TiAl.yace",lb)
+
 f_train = get_all_forces(ds_train)
-
 f_train_pred = get_all_forces(ds_train,lb)
-
 f_train_mae, f_train_rmse, f_train_rsq = calc_metrics(f_train_pred, f_train)
+
+@show f_train_mae
+
+test_ds = DataSet([ds[end-1]])
+f_descr_test = compute_force_descriptors(test_ds, ace)
+test_ds = DataSet(test_ds .+ f_descr_test)
+
+test_forces = get_all_forces(test_ds)
+@show test_forces = transpose(reshape(test_forces,3,:))
