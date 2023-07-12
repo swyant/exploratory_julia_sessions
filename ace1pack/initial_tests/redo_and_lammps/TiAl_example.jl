@@ -32,7 +32,7 @@ ACE1pack.linear_errors(data_train, model; weights=weights);
 test_data = data[2:10:end]
 ACE1pack.linear_errors(test_data, model; weights=weights);
 
-export2lammps("./TiAl_tutorial_pot.yace", model)
+#export2lammps("./TiAl_tutorial_pot.yace", model)
 
 @show data[end-1]
 @show forces(model.potential,data[end-1])
