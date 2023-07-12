@@ -100,6 +100,7 @@ function fixed_load_data(file, extxyz::ExtXYZ; T=Float64)
     end
     return DataSet(configs)
 end
+
 #######################################################################################################
 
 ds_path = "/Users/swyant/.julia/artifacts/b437d7d5fac4424b8203d0afc31732879d3da5b2/TiAl_tutorial.xyz" 
@@ -122,3 +123,9 @@ ds_train = DataSet(conf_train .+ f_descr_train)
 
 lb = LBasisPotential(ace)
 lb, Σ = learn!(lb, ds_train; α=1e-6)
+
+f_train = get_all_forces(ds_train)
+
+f_train_pred = get_all_forces(ds_train,lb)
+
+f_train_mae, f_train_rmse, f_train_rsq = calc_metrics(f_train_pred, f_train)
