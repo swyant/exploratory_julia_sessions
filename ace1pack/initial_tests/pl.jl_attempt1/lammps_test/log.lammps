@@ -1,0 +1,19 @@
+LAMMPS (15 Jun 2023)
+units          metal
+boundary       p p p
+atom_style     atomic
+
+read_data      TiAl_example_DATA
+Reading data file ...
+  orthogonal box = (0 0 0) to (8.4559072 8.4559072 12.192277)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  54 atoms
+  read_data CPU = 0.002 seconds
+
+pair_style     pace
+ACE version: 2022.6.27
+Recursive evaluator is used
+#pair_coeff     * * PL_example_TiAl.yace Ti Al
+pair_coeff     * * test_PL_example_TiAl.yace Ti Al
+Loading test_PL_example_TiAl.yace

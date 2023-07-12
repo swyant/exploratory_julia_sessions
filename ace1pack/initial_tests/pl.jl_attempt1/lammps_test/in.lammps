@@ -1,0 +1,14 @@
+units          metal
+boundary       p p p
+atom_style     atomic
+
+read_data      TiAl_example_DATA
+
+pair_style     pace
+#pair_coeff     * * PL_example_TiAl.yace Ti Al 
+pair_coeff     * * test_PL_example_TiAl.yace Ti Al 
+
+dump           final_check all custom 1 dump_final_check.custom id type x y z fx fy fz
+dump_modify    final_check sort id element Ti Al format line "%4d %1d %21.16f %21.16f %21.16f %21.16f %21.16f %21.16f"
+
+run 0
