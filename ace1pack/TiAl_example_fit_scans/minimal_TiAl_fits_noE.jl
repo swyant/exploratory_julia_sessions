@@ -1,7 +1,7 @@
 using ACE1 
 using ACE1pack
 using ACEfit
-using LinearAlgebra: I, Diagonal
+using LinearAlgebra: I, Diagonal, pinv
 using JuLIP
 
 ds_path = "/Users/swyant/.julia/artifacts/b437d7d5fac4424b8203d0afc31732879d3da5b2/TiAl_tutorial.xyz" 
@@ -58,3 +58,25 @@ pot_p = JuLIP.MLIPs.combine(rpib,coeffs_p)
 ACE1pack.linear_errors(data, pot_p)
 
 #### can I manually recreate the PotentialLearning.jl fit?
+
+AtA = transpose(Aw)*Aw
+Atb = transpose(Aw)*Yw
+Q = pinv(AtA, 1e-6)
+manual_coeffs = Q*Atb
+
+pot_manual = JuLIP.MLIPs.combine(rpib,manual_coeffs)
+ACE1pack.linear_errors(data,pot_manual)
+
+### Need to check these errors 
+#check_data = [ AtomsData(at;  energy_key = "energy", force_key="force",
+#                weights = weights) for at in [raw_data[end]]]
+#
+#forces(pot_manual, raw_data[end])
+#
+#ACE1pack.linear_errors(check_data, pot_manual)
+
+check_data = [ AtomsData(at;  energy_key = "energy", force_key="force",
+                weights = weights) for at in raw_data[1:2]]
+
+ACE1pack.linear_errors(check_data, pot_manual)
+

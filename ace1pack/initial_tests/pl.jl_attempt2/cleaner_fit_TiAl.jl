@@ -276,3 +276,4 @@ check_potential = JuLIP.MLIPs.combine(lb.basis.rpib,lb.β)
 data = JuLIP.read_extxyz(ds_path)
 test_struct = data[end-1]
 @show forces(check_potential,data[end-1])
+
