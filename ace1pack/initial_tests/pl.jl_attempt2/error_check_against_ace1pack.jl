@@ -255,17 +255,25 @@ coeffs = [0.025591381519026762, 0.03527125788791906, 0.030612348271342734, 0.066
 
 lb = LBasisPotential(coeffs,ace)
 
-test_ds = DataSet([ds[2]])
+test_ds = DataSet([ds[53]])
 #test_ds = DataSet([config for config in ds[1:2]])
-compute_force_descriptors(get_system.(test_ds)[1],ace)
-f_descr_test = compute_force_descriptors(test_ds, ace)
+#compute_force_descriptors(get_system.(test_ds)[1],ace)
 
+f_descr_test = compute_force_descriptors(test_ds, ace)
 test_ds = DataSet(test_ds .+ f_descr_test)
 
-test_forces_pred = get_all_forces(test_ds, lb)
+#test_forces_pred = get_all_forces(test_ds, lb)
 #@show fforces = transpose(reshape(test_forces_pred,3,:))
-
 f_ref = get_all_forces(test_ds)
 f_mae, f_rmse, f_rsq = calc_metrics(test_forces_pred, f_ref)
 
-mock_export2lammps("IBP_ACE_example_TiAl_2.yace", lb)
+#mock_export2lammps("IBP_ACE_example_TiAl_2.yace", lb)
+
+
+full_ds = deepcopy(ds)
+f_descr_full = compute_force_descriptors(full_ds,ace)
+full_ds = DataSet(full_ds .+ f_descr_full)
+
+full_forces = get_all_forces(full_ds,lb)
+full_f_ref = get_all_forces(full_ds)
+f_mae, f_rmse, f_rsq = calc_metrics(full_forces, full_f_ref)
