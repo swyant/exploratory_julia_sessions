@@ -37,7 +37,7 @@ potw = JuLIP.MLIPs.combine(rpib,resultsw["C"])
 
 ACE1pack.linear_errors(data,potw)
 
-### Manually making basis, haven't checked this 
+### Manually making prior, haven't checked this 
 dp = Float64[]
 append!(dp, ACE1.scaling(rpib, 2, 1.0))
 prior = Diagonal(1 .+ dp)

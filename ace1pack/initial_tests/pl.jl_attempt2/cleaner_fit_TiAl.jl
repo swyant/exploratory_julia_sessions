@@ -257,7 +257,7 @@ ds_train = DataSet(conf_train .+ f_descr_train)
 lb = LBasisPotential(ace)
 lb, Σ = learn!(lb, ds_train; α=1e-6)
 
-mock_export2lammps("IBP_ACE_example_TiAl.yace", lb)
+#mock_export2lammps("IBP_ACE_example_TiAl.yace", lb)
 
 f_train = get_all_forces(ds_train)
 f_train_pred = get_all_forces(ds_train,lb)
