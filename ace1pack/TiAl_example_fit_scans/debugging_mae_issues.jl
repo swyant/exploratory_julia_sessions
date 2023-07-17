@@ -26,6 +26,6 @@ weights = Dict("default" => Dict("E" =>0.0,"F" => 1.0, "V"=>0.0))
 
 check_data = [ AtomsData(at;  energy_key = "energy", force_key="force",
                 weights = weights) for at in [raw_data[end]]]
-forces(pot_manual, raw_data[20])
+forces(pot_manual, raw_data[2])
 ACE1pack.linear_errors(check_data, pot_manual)
 

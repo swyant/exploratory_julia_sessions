@@ -3,6 +3,13 @@ using InteratomicPotentials, InteratomicBasisPotentials
 using Unitful, UnitfulAtomic
 using AtomsBase 
 using StaticArrays
+using JuLIP
+using ACE1pack, ACE1x
+using ACE1
+using Interpolations
+using OrderedCollections
+using YAML
+
 #### Custom functions (NEED TO MERGE THIS ASAP)
 function fixed_load_data(file, extxyz::ExtXYZ; T=Float64)
     configs = Configuration[]
@@ -99,6 +106,137 @@ function fixed_load_data(file, extxyz::ExtXYZ; T=Float64)
     end
     return DataSet(configs)
 end
+
+
+# TODO: update this to auto-detect elements from rpib
+# TODO: auto-delete .table files since they're junk
+function mock_export2lammps(fname, lb::LinearBasisPotential)
+    @assert typeof(lb.basis) == ACE
+
+    ### This is all so that I can generated a pair basis, which export2lammps needed
+    ### should be refactored once it's actually added to our codebases
+    mock_kwargs = Dict( :pair_basis     => :legendre,
+                        :elements       => [:Ti,:Al],
+                        :pair_degree    => 6,
+                        :pair_rcut      => 5.5,
+                        :pair_transform => (:agnesi,1,3),
+                        :pair_envelope  => (:r,2),
+                        :r0             => :bondlen,
+                        :rcut           => 5.5)
+    
+    pairb = ACE1x._pair_basis(mock_kwargs)
+    pairb_length = length(pairb)
+    
+    rpib  = lb.basis.rpib
+    super_basis = JuLIP.MLIPs.IPSuperBasis([pairb,rpib])
+
+    rpib_params = copy(lb.β)
+    params = prepend!(rpib_params,randn(pairb_length))
+    pot_novref = JuLIP.MLIPs.combine(super_basis,params)
+
+    Eref = [:Ti => 0.0, :Al => 0.0]
+    vref = JuLIP.OneBody(Eref...)
+
+    pot = JuLIP.MLIPs.SumIP([pot_novref.components...,vref])
+
+    mock_ace1model = ACE1x.ACE1Model(super_basis,params,vref,pot,Dict())
+    export2lammps(fname, mock_ace1model.potential, rpib) 
+    
+end
+
+
+function export2lammps(fname, IP,rpib::RPIBasis)
+
+    if length(IP.components) != 3
+        throw("IP must have three components which are OneBody, pair potential, and ace")
+    end
+
+    ordered_components = []
+
+    for target_type in [OneBody, PolyPairPot, PIPotential]
+        did_not_find = true
+        for i = 1:3
+            if typeof(IP.components[i]) <: target_type
+                push!(ordered_components, IP.components[i])
+                did_not_find = false
+            end
+        end
+
+        if did_not_find
+            throw("IP must have three components which are OneBody, pair potential, and ace")
+        end
+    end
+
+    V1 = ordered_components[1]
+    V2 = ordered_components[2]
+    V3 = ordered_components[3]
+
+    species = collect(string.(chemical_symbol.(V3.pibasis.zlist.list)))
+    species_dict = Dict(zip(collect(0:length(species)-1), species))
+    reversed_species_dict = Dict(zip(species, collect(0:length(species)-1)))
+
+
+    elements = Vector(undef, length(species))
+    E0 = zeros(length(elements))
+
+    for (index, element) in species_dict
+        E0[index+1] = V1(Symbol(element))
+        elements[index+1] = element
+    end
+
+    # V1 and V3  (V2 handled below)
+
+    # Begin assembling data structure for YAML
+    data = OrderedDict()
+    data["elements"] = elements
+
+    data["E0"] = E0
+
+    # embeddings
+    data["embeddings"] = Dict()
+    for species_ind1 in sort(collect(keys(species_dict)))
+        data["embeddings"][species_ind1] = Dict(
+            "ndensity" => 1,
+            "FS_parameters" => [1.0, 1.0],
+            "npoti" => "FinnisSinclairShiftedScaled",
+            "drho_core_cutoff" => 1.000000000000000000,
+            "rho_core_cutoff" => 100000.000000000000000000)
+    end
+
+    # bonds
+    data["bonds"] = OrderedDict()
+    basis1p = deepcopy(rpib.pibasis.basis1p)
+    radialsplines = ACE1.Splines.RadialSplines(basis1p.J; zlist = basis1p.zlist, nnodes = 10000)
+    ranges, nodalvals, zlist = ACE1.Splines.export_splines(radialsplines)
+    # compute spline derivatives
+    # TODO: move this elsewhere
+    nodalderivs = similar(nodalvals)
+    for iz1 in 1:size(nodalvals,2), iz2 in 1:size(nodalvals,3)
+        for i in 1:size(nodalvals,1)
+            range = ranges[i,iz1,iz2]
+            spl = radialsplines.splines[i,iz1,iz2]
+            deriv(r) = Interpolations.gradient(spl,r)[1]
+            nodalderivs[i,iz1,iz2] = deriv.(range)
+        end
+    end
+    # ----- end section to move
+    for iz1 in 1:size(nodalvals,2), iz2 in 1:size(nodalvals,3)
+        data["bonds"][[iz1-1,iz2-1]] = OrderedDict{Any,Any}(
+            "radbasename" => "ACE.jl",
+            "rcut" => ranges[1,iz1,iz2][end],         # note hardcoded 1
+            "nradial" => length(V3.pibasis.basis1p.J.J.A),
+            "nbins" => length(ranges[1,iz1,iz2])-1)   # note hardcoded 1
+        nodalvals_map = OrderedDict([i-1 => nodalvals[i,iz1,iz2] for i in 1:size(nodalvals,1)])
+        data["bonds"][[iz1-1,iz2-1]]["splinenodalvals"] = nodalvals_map
+        nodalderivs_map = OrderedDict([i-1 => nodalderivs[i,iz1,iz2] for i in 1:size(nodalvals,1)])
+        data["bonds"][[iz1-1,iz2-1]]["splinenodalderivs"] = nodalderivs_map
+    end
+
+    functions, lmax = ACE1pack.export_ACE_functions(V3, species, reversed_species_dict)
+    data["functions"] = functions
+    data["lmax"] = lmax
+    YAML.write_file(fname, data)
+end
 ###############################
 
 
@@ -117,7 +255,7 @@ coeffs = [0.025591381519026762, 0.03527125788791906, 0.030612348271342734, 0.066
 
 lb = LBasisPotential(coeffs,ace)
 
-test_ds = DataSet([ds[20]])
+test_ds = DataSet([ds[2]])
 #test_ds = DataSet([config for config in ds[1:2]])
 compute_force_descriptors(get_system.(test_ds)[1],ace)
 f_descr_test = compute_force_descriptors(test_ds, ace)
@@ -129,3 +267,5 @@ test_forces_pred = get_all_forces(test_ds, lb)
 
 f_ref = get_all_forces(test_ds)
 f_mae, f_rmse, f_rsq = calc_metrics(test_forces_pred, f_ref)
+
+mock_export2lammps("IBP_ACE_example_TiAl_2.yace", lb)
