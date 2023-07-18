@@ -65,3 +65,19 @@ rpib2 = ACE1.rpi_basis(;
             rcut    = 5.5,
             pin     = 2,
        )
+
+pot_improper = JuLIP.MLIPs.combine(rpib2,coeffs)
+
+energies2 = Vector{Float64}()
+for rij in rijs
+    atom2_pos = atom1_pos .+ [rij, 0.0, 0.0]
+    sys_tmp = FlexibleSystem([ AtomsBase.Atom(:Ti, atom1_pos*u"Å"),
+                                AtomsBase.Atom(:Al, atom2_pos*u"Å")],
+                                box,bcs)
+    sys = JuLIP.Atoms(sys_tmp)
+    e = energy(pot_improper,sys)
+    push!(energies2,e) 
+end
+
+plot(rijs,energies2)
+xlims!(1.8,5.6)
