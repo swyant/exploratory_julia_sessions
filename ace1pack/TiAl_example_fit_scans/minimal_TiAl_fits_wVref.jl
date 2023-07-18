@@ -3,6 +3,7 @@ using ACE1pack
 using ACEfit
 using LinearAlgebra: I, Diagonal, pinv
 using JuLIP
+using CSV, DataFrames
 
 ds_path = "/Users/swyant/.julia/artifacts/b437d7d5fac4424b8203d0afc31732879d3da5b2/TiAl_tutorial.xyz" 
 raw_data = read_extxyz(ds_path)
@@ -61,6 +62,8 @@ solver_qr = ACEfit.QR()
 results_qr = ACEfit.solve(solver_qr,A,Y)
 
 @show results_qr["C"]
+
+CSV.write("TiAl_example_N2_rinDefault_pin0_coeffs.csv", DataFrame(results_qr),header=false)
 
 pot_qr_tmp = JuLIP.MLIPs.combine(rpib,results_qr["C"])
 pot_qr = JuLIP.MLIPs.SumIP(pot_qr_tmp,vref)
