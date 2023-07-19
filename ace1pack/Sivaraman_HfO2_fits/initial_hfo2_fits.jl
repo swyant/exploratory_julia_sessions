@@ -36,7 +36,7 @@ rpib1 = ACE1.rpi_basis(;
             pin     = 0,
        )
 
-@show length(rpib1)
+@show length(rpib1) #498
 
 weights = Dict("default" => Dict("E" =>1.0,"F" => 1.0, "V"=>0.0))
 
@@ -342,5 +342,124 @@ ACE1pack.linear_errors(train_data,pot_blr)
 │ crystal │   4.444 │    0.162 │   0.000 │
 ├─────────┼─────────┼──────────┼─────────┤
 │     set │   4.723 │    0.179 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+=#
+
+#################
+
+rpib2 = ACE1.rpi_basis(;
+            species = [:Hf, :O],
+            N       = 3, 
+            maxdeg  = 12,
+            D       = ACE1.SparsePSHDegree(; wL = 1.5, csp = 1.0),
+            r0      = 2.15,
+            rin     = 0.65*2.15,  # Does this meaningfully get used in pin=0?
+            rcut    = 5.0,
+            pin     = 0,
+)
+
+@show length(rpib2) #2408
+
+
+############## 
+#A2, Y2, W2 = ACEfit.assemble(train_data, rpib2)
+
+#CSV.write("rpib2_design_mat.csv", DataFrame(Tables.table(A2)),header=false) # This would've been like > 20 GBs
+
+rpib3 = ACE1.rpi_basis(;
+            species = [:Hf, :O],
+            N       = 3, 
+            maxdeg  = 10,
+            D       = ACE1.SparsePSHDegree(; wL = 1.5, csp = 1.0),
+            r0      = 2.15,
+            rin     = 0.65*2.15,  # Does this meaningfully get used in pin=0?
+            rcut    = 5.0,
+            pin     = 0,
+)
+
+@show length(rpib3)
+
+A3, Y3, W3 = ACEfit.assemble(train_data, rpib3)
+
+
+#### Manual approach
+W3_man = ones(Float64,length(W3))
+man_eman_coeffs3 = (A3'* Diagonal(W3_man) *A3) \ (A3'* Diagonal(W3_man) * Y3 )
+@show man_eman_coeffs3
+
+pot_emmanuel_temp3 = JuLIP.MLIPs.combine(rpib3,man_eman_coeffs3)
+pot_emmanuel3 = JuLIP.MLIPs.SumIP(pot_emmanuel_temp3, vref)
+ACE1pack.linear_errors(train_data,pot_emmanuel3)
+#=
+[ Info: RMSE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   5.946 │    0.271 │   0.000 │
+│ crystal │   5.021 │    0.195 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   5.318 │    0.220 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+[ Info: MAE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   4.655 │    0.203 │   0.000 │
+│ crystal │   3.920 │    0.143 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   4.143 │    0.161 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+=# 
+ACE1pack.linear_errors(val_data,pot_emmanuel3)
+#=
+[ Info: RMSE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   6.050 │    0.282 │   0.000 │
+│ crystal │   5.480 │    0.192 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   5.672 │    0.224 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+[ Info: MAE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   4.729 │    0.212 │   0.000 │
+│ crystal │   4.298 │    0.139 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   4.438 │    0.162 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+=#
+
+
+#### regularized QR
+solver_reg = ACEfit.QR(; lambda=1e-3)
+
+results_reg3 = ACEfit.solve(solver_reg,A3,Y3)
+
+@show results_reg3["C"]
+
+pot_reg_tmp3 = JuLIP.MLIPs.combine(rpib3,results_reg3["C"])
+pot_reg3 = JuLIP.MLIPs.SumIP(pot_reg_tmp3,vref)
+ACE1pack.linear_errors(train_data,pot_reg3)
+#=
+[ Info: RMSE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   5.961 │    0.268 │   0.000 │
+│ crystal │   4.987 │    0.194 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   5.301 │    0.219 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+[ Info: MAE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   4.670 │    0.201 │   0.000 │
+│ crystal │   3.900 │    0.142 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   4.133 │    0.160 │   0.000 │
 └─────────┴─────────┴──────────┴─────────┘
 =#
