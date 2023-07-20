@@ -463,3 +463,49 @@ ACE1pack.linear_errors(train_data,pot_reg3)
 │     set │   4.133 │    0.160 │   0.000 │
 └─────────┴─────────┴──────────┴─────────┘
 =#
+
+
+rpib4 = ACE1.rpi_basis(;
+            species = [:Hf, :O],
+            N       = 4, 
+            maxdeg  = 9,
+            D       = ACE1.SparsePSHDegree(; wL = 1.5, csp = 1.0),
+            r0      = 2.15,
+            rin     = 0.65*2.15,  # Does this meaningfully get used in pin=0?
+            rcut    = 5.0,
+            pin     = 0,
+)
+
+@show length(rpib4)
+
+A4, Y4, W4 = ACEfit.assemble(train_data, rpib4)
+
+solver_reg = ACEfit.QR(; lambda=1e-3)
+
+results_reg4 = ACEfit.solve(solver_reg,A4,Y4)
+
+@show results_reg4["C"]
+
+pot_reg_tmp4 = JuLIP.MLIPs.combine(rpib4,results_reg4["C"])
+pot_reg4 = JuLIP.MLIPs.SumIP(pot_reg_tmp4,vref)
+ACE1pack.linear_errors(train_data,pot_reg4)
+#=
+[ Info: RMSE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   5.689 │    0.267 │   0.000 │
+│ crystal │   4.883 │    0.193 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   5.140 │    0.218 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+[ Info: MAE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   4.513 │    0.200 │   0.000 │
+│ crystal │   3.900 │    0.143 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   4.085 │    0.160 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+=#
