@@ -229,3 +229,86 @@ ACE1pack.linear_errors(train_data,pot_man4)
 ├─────────┼─────────┼──────────┼─────────┤
 │     set │   4.751 │    0.201 │   0.000 │
 =#
+
+
+#### sanity check against just forces
+rpib_orig = ACE1.rpi_basis(;
+            species = [:Hf, :O],
+            N       = 3, 
+            maxdeg  = 10,
+            D       = ACE1.SparsePSHDegree(; wL = 1.5, csp = 1.0),
+            r0      = 2.15,
+            rin     = 0.65*2.15,  # Does this meaningfully get used when pin=0?
+            rcut    = 5.0, # the only thing that has changed
+            pin     = 0,
+       )
+
+
+weights_noE = weights = Dict("default" => Dict("E" =>0.0,"F" => 1.0, "V"=>0.0))
+
+train_noE_data = [ AtomsData(at;  energy_key = "eenergy", force_key="forces",  # purposefully!!! misspelling energy_key
+                        weights = weights_noE, v_ref=vref) for at in raw_data[train_idxs]]
+
+val_noE_data = [ AtomsData(at;  energy_key = "eenergy", force_key="forces",
+                        weights = weights_noE, v_ref=vref) for at in raw_data[val_idxs]]
+
+A_noE, Y_noE, W_noE = ACEfit.assemble(train_noE_data, rpib_orig)
+
+man_coeffs = (A_noE'*A_noE) \ (A_noE'* Y_noE)
+pot_man_noE = manual_fit(A_noE,Y_noE,rpib_orig,vref)
+
+ACE1pack.linear_errors(train_noE_data, pot_man_noE)
+#=
+[ Info: RMSE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   0.000 │    0.267 │   0.000 │
+│ crystal │   0.000 │    0.193 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   0.000 │    0.218 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+[ Info: MAE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   0.000 │    0.201 │   0.000 │
+│ crystal │   0.000 │    0.142 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   0.000 │    0.159 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+=#
+
+
+train_noE2_data = [ AtomsData(at;  energy_key = "energy", force_key="forces",  # purposefully!!! misspelling energy_key
+                        weights = weights_noE, v_ref=vref) for at in raw_data[train_idxs]]
+
+val_noE2_data = [ AtomsData(at;  energy_key = "energy", force_key="forces",
+                        weights = weights_noE, v_ref=vref) for at in raw_data[val_idxs]]
+
+A_noE2, Y_noE2, W_noE2 = ACEfit.assemble(train_noE2_data, rpib_orig)
+
+man_coeffs2 = (A_noE2'* Diagonal(W_noE2) * A_noE2) \ (A_noE2'* Diagonal(W_noE2) * Y_noE2)
+pot_man_2 = JuLIP.MLIPs.combine(rpib_orig,man_coeffs2)
+
+ACE1pack.linear_errors(train_noE_data, pot_man_2)
+#=
+[ Info: RMSE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   0.000 │    0.267 │   0.000 │
+│ crystal │   0.000 │    0.193 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   0.000 │    0.218 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+[ Info: MAE Table
+┌─────────┬─────────┬──────────┬─────────┐
+│    Type │ E [meV] │ F [eV/A] │ V [meV] │
+├─────────┼─────────┼──────────┼─────────┤
+│  amorph │   0.000 │    0.201 │   0.000 │
+│ crystal │   0.000 │    0.142 │   0.000 │
+├─────────┼─────────┼──────────┼─────────┤
+│     set │   0.000 │    0.159 │   0.000 │
+└─────────┴─────────┴──────────┴─────────┘
+=#
