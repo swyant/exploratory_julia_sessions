@@ -92,12 +92,12 @@ ACE1pack.linear_errors(train_data,pot_reg3)
  [4.826567066652775, 0.39094008889976917, -1.345187907057038]
 =#
 
-export2lammps("Siviraman_GAP_HfO2_N3_rcut5_maxdeg10_regQR.yace", pot_reg3,rpib3)
+custom_export2lammps("Siviraman_GAP_HfO2_N3_rcut5_maxdeg10_regQR.yace", pot_reg3,rpib3)
 
 
 
 ######## UTILITY FUNCTIONS #########
-function export2lammps(fname, IP,rpib::RPIBasis)
+function custom_export2lammps(fname, IP,rpib::RPIBasis)
 
     if length(IP.components) != 2
         throw("IP must have two components which are OneBody and ace")
