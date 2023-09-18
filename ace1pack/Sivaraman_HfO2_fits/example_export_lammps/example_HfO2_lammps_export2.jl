@@ -253,7 +253,7 @@ function write_pairpot_table(fname, V2, species_dict)
         end
 
         rin = 0.001
-        spacing = 0.0005 # SPENCER EDIT
+        spacing = 0.0002 # SPENCER EDIT
         rs = rin:spacing:rout
 
         # section header
